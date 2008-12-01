@@ -8,7 +8,7 @@ from math import *
 import window
 
 def flip_points(points):
-    """Flips a set of points <- return new points list.
+    """Flips the Y coordinates in a set of points <- return new points list.
     """
     
     lowest = 0
