@@ -1,1 +1,3 @@
 Please leave the results from examples/speed_test.py in a comment below.
+
+To leave a comment you must be signed into your google account.
