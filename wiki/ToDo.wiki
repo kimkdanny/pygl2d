@@ -2,6 +2,6 @@
 
   * Add blitting into images.
   * Increase performance
-  * Add more primitives
+  * Add more graphics primitives
   * Speed up draw.circle
   * Add more image transformations
