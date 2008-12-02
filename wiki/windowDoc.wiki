@@ -1,0 +1,16 @@
+#labels Documentation
+= pygl2d.window =
+
+PyGL2D's window module is for setting up the window for drawing.
+
+=== window.init(size, caption="PyGL2D Window", flags=DOUBLEBUF) ===
+
+Initialise the SDL/PyGame window. `caption` is the window caption. `flags` can be extra flags.
+
+=== window.begin_draw() ===
+ 
+Call this right before you begin drawing your objects. If you don't, then you won't see anything!
+
+=== window.end_draw() ===
+ 
+And always call this after you're done drawing, or else you'll get some crazy GL errors.
