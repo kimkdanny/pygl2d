@@ -54,11 +54,10 @@ def main():
     
     while 1:
         
-        #If you wish to speedtest this for me, change the 60.0 variable to 1000.0.
-        #Then send me the FPS you see on the topleft portion of the screen.
-        #Note that this uses up a very high amount of CPU (on mine it's around 150%)
-        #Thank you :)
+        #Tick the clock.
         dt = clock.tick(60.0) / 1000.0
+        
+        #Always use change_text to, well, change text ;-)
         fps_display.change_text(str(int(clock.get_fps())) + " fps")
         
         #get input
