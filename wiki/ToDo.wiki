@@ -1,0 +1,7 @@
+= ToDo for PyGL2D =
+
+  * Add blitting into images.
+  * Increase performance
+  * Add more primitives
+  * Speed up draw.circle
+  * Add more image transformations
