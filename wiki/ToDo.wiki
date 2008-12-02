@@ -1,4 +1,4 @@
-= ToDo for PyGL2D =
+= TODO for PyGL2D =
 
   * Add blitting into images.
   * Increase performance
