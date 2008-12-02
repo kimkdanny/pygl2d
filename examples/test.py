@@ -101,7 +101,7 @@ def main():
         #Draw some lists of lines
         pygl2d.draw.lines(poly1, [255, 0, 255], width=3, closed=1)
         pygl2d.draw.lines(poly2, [0, 0, 100], width=3, closed=1)
-       
+
         ######################
         #### RECT DRAWING ####
         ######################
@@ -143,7 +143,6 @@ def main():
         #### END DRAWING ####
         #####################
         pygl2d.window.end_draw()
-        pygame.display.flip()
 
 #run if executed
 if __name__ == "__main__":

@@ -38,6 +38,7 @@ def end_draw():
     """
     
     disable2D()
+    pygame.display.flip()
 
 def get_size():
     """Get the size of the window <- return tuple

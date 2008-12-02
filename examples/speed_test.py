@@ -37,6 +37,5 @@ while running:
     for i in range(1000):
         image.draw([0, 0])
     pygl2d.window.end_draw()
-    pygame.display.flip()
 
 pygame.quit()
