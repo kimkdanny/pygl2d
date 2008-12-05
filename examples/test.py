@@ -55,7 +55,7 @@ def main():
     while 1:
         
         #Tick the clock.
-        dt = clock.tick(60.0) / 1000.0
+        dt = clock.tick(1000.0) / 1000.0
         
         #Always use change_text to, well, change text ;-)
         fps_display.change_text(str(int(clock.get_fps())) + " fps")

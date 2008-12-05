@@ -96,25 +96,18 @@ def rect(rectstyle, color, width=0, alpha=255.0):
 def circle(pos, radius, color, alpha=255.0):
     """Draw a circle <- return None
     """
-   
+    
+    w, x, y = color
+    w = w / 255.0 if w else 0
+    x = x / 255.0 if x else 0
+    y = y / 255.0 if y else 0
+    z = alpha / 255.0 if alpha else 0
     glDisable(GL_TEXTURE_2D)
 
-    glBegin(GL_POLYGON)
-    glColor4f(color[0]/255.0, color[1]/255.0, color[2]/255.0, alpha/255.0)
-    
-    angle = 0.0
-    points = []
-    offset = window.get_size()[1]
-    pos[1] = offset - pos[1]
-    while angle <= 2.0*3.14:
-        angle += 0.15
-        points.append((pos[0] + sin(angle) * radius, pos[1] + cos(angle) * radius))
-    for p in points:
-        glVertex2f(*p)
-
-    glEnd()
-    glColor4f(1.0,1.0,1.0,1.0)
-    glDisable(GL_COLOR_MATERIAL)
-    glDisable(GL_POLYGON_SMOOTH)
+    c = gluNewQuadric()
+    glColor4f(w, x, y, z)
+    glPushMatrix()
+    glTranslatef(pos[0], pos[1], 0)
+    gluDisk(c, 0, radius, 100, 100)
+    glPopMatrix()
     glEnable(GL_TEXTURE_2D)
-    
