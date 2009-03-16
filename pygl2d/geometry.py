@@ -78,7 +78,7 @@ def circle_collision(p1, p2, r1, r2):
     """Detects a collision between two circles <- return bool
     """
     
-    if ((p1[0] - p2[0].x)**2 + (p1[1] - p2[1])**2) <= (r1 + r2):
+    if ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2) <= (r1 + r2):
         return True
     return False
 

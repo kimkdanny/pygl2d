@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #PyGL2D - A 2D library for PyGame and PyOpenGL
 #Copyright (C) 2008 - PyMike
 
@@ -8,6 +9,39 @@ import pygame
 from pygame.locals import *
 
 import rect, window
+from math import *
+
+WRAP = 0
+FILTER = 1
+MIPMAP = 2
+
+def closest_power_of_two ( x ):
+	return ( pow(2, floor ( ( log ( x ) /log ( 2.0 ) ) + 0.5 ) ) );
+
+def next_power_of_two ( x ):
+	return ( pow(2, ceil ( ( log ( x ) /log ( 2.0 ) ) ) ) );
+
+def previous_power_of_two ( x ):
+	return ( pow(2, floor ( ( log ( x ) /log ( 2.0 ) ) ) ) );
+
+#returns closest power of 2 which is greater than x_current. Max value is texSize.
+def wanted_size ( texSize, x_current ):
+	x_wanted=next_power_of_two ( x_current );
+	if ( x_wanted > texSize ): x_wanted = texSize;
+	return ( x_wanted );
+
+def resize ( image, texSize ):
+	H1=image.get_height()
+	W1=image.get_width()
+	H2=wanted_size(texSize,H1)
+	W2=wanted_size(texSize,W1)
+	if ( H1 != H2 ) or ( H2 != W2 ):
+	    dst_rect = pygame.Rect(0,0,W2,H2)
+	    dest=pygame.Surface((W2,H2), 0, image)
+	    dest.blit(image, (0,0), dst_rect)
+	    return dest
+	else:
+	    return image
 
 #Thanks Ian Mallett!
 def Texture(surface,filters):
@@ -23,16 +57,16 @@ def Texture(surface,filters):
         return texture
     
     for f in filters:
-        if f == "filter":
+        if f == FILTER:
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        elif f == "wrap":
+        elif f == WRAP:
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        elif f == "mipmap":
+        elif f == MIPMAP:
             glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE )
             gluBuild2DMipmaps(GL_TEXTURE_2D,3,surface.get_width(),surface.get_height(),GL_RGB,GL_UNSIGNED_BYTE,Data)
-            if "filter" in filters:
+            if FILTER in filters:
                 glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
                 glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
             else:
@@ -46,7 +80,7 @@ def Texture(surface,filters):
 #Again, thanks Ian :)
 class Image:
     
-    def __init__(self, filename, filters=["filter"]):
+    def __init__(self, filename, filters=[FILTER]):
         """Load an image for drawing. <- return None
         """
         
@@ -57,15 +91,26 @@ class Image:
             image = filename
         self.image = image
         
+	texSize=glGetIntegerv ( GL_MAX_TEXTURE_SIZE)
+	oldH= image.get_height()
+	oldW= image.get_width()
+	image2=resize(image,texSize)
+	newH= image2.get_height()
+	newW= image2.get_width()
+	fracH=oldH/float(newH)
+	fracW=oldW/float(newW)
+
         #convert to GL texture
-        self.texture = Texture(image, filters)
+        self.texture = Texture(image2, filters)
         
         #image dimensions
         self.width = self.w = image.get_width()
         self.height = self.h = image.get_height()
         self.size = image.get_size()
+   
         self.win_size = window.get_size()
-        
+                   
+            
         #image mods
         self.rotation = 0
         self.scalar = 1.0
@@ -77,10 +122,10 @@ class Image:
         glNewList(self.dl, GL_COMPILE)
         glBindTexture(GL_TEXTURE_2D, self.texture)
         glBegin(GL_QUADS)
-        glTexCoord2i(0, 0); glVertex3f(-self.width/2.0,-self.height/2.0,0)
-        glTexCoord2i(1, 0); glVertex3f( self.width/2.0,-self.height/2.0,0)
-        glTexCoord2i(1, 1); glVertex3f( self.width/2.0, self.height/2.0,0)
-        glTexCoord2i(0, 1); glVertex3f(-self.width/2.0, self.height/2.0,0)
+        glTexCoord2f(0, 1-fracH); glVertex3f(-self.width/2.0,-self.height/2.0,0)
+        glTexCoord2f(fracW, 1-fracH); glVertex3f( self.width/2.0,-self.height/2.0,0)
+        glTexCoord2f(fracW, 1.0); glVertex3f( self.width/2.0, self.height/2.0,0)
+        glTexCoord2f(0, 1.0); glVertex3f(-self.width/2.0, self.height/2.0,0)
         glEnd()
         glEndList()
     
@@ -127,7 +172,6 @@ class Image:
     def draw(self, pos):
         """Draw the image to a certain position <- return None
         """
-        
         glPushMatrix()
         #print pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy
         glTranslatef(pos[0]+self.ox, self.win_size[1] - pos[1] - self.oy, 0)
