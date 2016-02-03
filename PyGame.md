@@ -1,0 +1,1 @@
+PyGame is a Python wrapper for SDL (Simple Direct MediaLayer).

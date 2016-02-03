@@ -1,0 +1,1 @@
+PyOpenGL is a wrapper for OpenGL, a fast graphics library for rendering 3D. It is also frequently used for rendering fast 2D graphics.
